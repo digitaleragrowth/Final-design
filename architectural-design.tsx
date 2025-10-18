@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useRef, memo, MouseEventHandler } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -12,13 +13,13 @@ const servicesSubLinks = [
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/index.html' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
@@ -235,15 +236,6 @@ const Header = ({ theme }) => {
 
   return (
     <header className={headerClasses}>
-      <div className="logo">
-        <AppLink href="/index.html" className="logo-link" aria-label="Taj Design Consult - Homepage">
-            <span className="logo-taj">TAJ</span>
-            <div className="logo-right">
-                <span className="logo-line"></span>
-                <span className="logo-consultancy">DESIGN CONSULTANCY</span>
-            </div>
-        </AppLink>
-      </div>
       <nav className="main-nav" aria-label="Main navigation">
         <ul>
           {navLinks.map((link) => (
@@ -502,7 +494,7 @@ const CallToAction = () => (
             <p className="scroll-trigger fade-up" style={{ transitionDelay: '0.2s' }}>
                 Have a vision for your next project? Our team of experts is ready to help you bring it to life. Contact us today to discuss your ideas.
             </p>
-            <a href="/contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
+            <a href="contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
         </div>
     </section>
 );
@@ -567,7 +559,7 @@ const ServicePage = () => {
       <div className="main-container">
         <LeftSidebar />
         <main className="main-content" id="main-content" tabIndex={-1}>
-          <section className="service-hero-section scroll-trigger fade-up">
+          <section className="service-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://png.pngtree.com/thumb_back/fh260/background/20240611/pngtree-construction-project-architect-image_15747582.jpg')` }}>
             <div className="container">
               <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>Architectural <strong>Design</strong></h1>
             </div>

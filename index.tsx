@@ -7,20 +7,20 @@ declare const gsap: any;
 // --- DATA & CONFIG ---
 
 const servicesSubLinks = [
-  { name: 'Architectural Design', href: '/architectural-design.html', icon: 'fas fa-archway', description: 'Innovative and functional spaces from concept to construction.', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60' },
-  { name: 'Engineering Consultancy', href: '/engineering-consultancy.html', icon: 'fas fa-cogs', description: 'Expert technical advice and solutions for robust project outcomes.', image: 'https://images.unsplash.com/photo-1518692113669-e34fa251a37c?w=800&auto=format&fit=crop&q=60' },
-  { name: 'Project Management Consultancy', href: '/project-management.html', icon: 'fas fa-tasks', description: 'Overseeing projects from inception to completion on time and budget.', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60' },
-  { name: 'Sustainability & Energy', href: '/sustainability-energy.html', icon: 'fas fa-leaf', description: 'Integrating green principles for environmentally responsible designs.', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Architectural Design', href: 'architectural-design.html', icon: 'fas fa-archway', description: 'Innovative and functional spaces from concept to construction.', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Engineering Consultancy', href: 'engineering-consultancy.html', icon: 'fas fa-cogs', description: 'Expert technical advice and solutions for robust project outcomes.', image: 'https://images.unsplash.com/photo-1518692113669-e34fa251a37c?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Project Management Consultancy', href: 'project-management.html', icon: 'fas fa-tasks', description: 'Overseeing projects from inception to completion on time and budget.', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Sustainability & Energy', href: 'sustainability-energy.html', icon: 'fas fa-leaf', description: 'Integrating green principles for environmentally responsible designs.', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&auto=format&fit=crop&q=60' },
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const servicePageData = {
@@ -181,43 +181,6 @@ const careerOpenings = [
     },
 ];
 
-// --- ROUTING ---
-
-const NavigationContext = createContext<(path: string) => void>(() => {});
-
-const useRouter = () => {
-    const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-    useEffect(() => {
-        const onLocationChange = () => {
-            setCurrentPath(window.location.pathname);
-            window.scrollTo(0, 0);
-            const mainContent = document.getElementById('main-content');
-            if (mainContent) {
-                mainContent.focus();
-            }
-        };
-        window.addEventListener('popstate', onLocationChange);
-        return () => window.removeEventListener('popstate', onLocationChange);
-    }, []);
-
-    const navigate = (path: string) => {
-        if (path.startsWith('/index.html#')) {
-            window.location.href = path; // Handle hash links for the homepage
-            return;
-        }
-        if (window.location.pathname !== path) {
-            window.history.pushState({}, '', path);
-            const navEvent = new PopStateEvent('popstate');
-            window.dispatchEvent(navEvent);
-        }
-    };
-
-    return { currentPath, navigate };
-};
-
-const useNavigation = () => useContext(NavigationContext);
-
 // --- SHARED & LAYOUT COMPONENTS ---
 
 const SkipToContentLink = () => (
@@ -372,8 +335,6 @@ const WhatsAppChatWidget = () => (
     </a>
 );
 
-// REFACTORED: This component is now simplified to handle clicks correctly in a multi-page app context.
-// It removes the SPA routing logic that was preventing links to other pages from working.
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
   href: string;
   className?: string;
@@ -384,16 +345,10 @@ const AppLink = ({ href, className = '', children, onClick, ...props }: {
     const isToggle = href === '#';
 
     const handleClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
-        // Prevent default browser action only for placeholder toggle links (used for menus).
         if (isToggle) {
             e.preventDefault();
         }
         
-        // For all other links (including cross-page .html links and on-page #hash-links),
-        // we do NOT prevent default. We let the browser handle navigation.
-        // The useSmoothScroll hook will intercept on-page hash links to provide smooth scrolling.
-
-        // If an onClick handler was passed from the parent, call it for side-effects like closing menus.
         if (onClick) {
             onClick(e);
         }
@@ -403,7 +358,6 @@ const AppLink = ({ href, className = '', children, onClick, ...props }: {
         <a 
             href={href} 
             className={className} 
-            // Only attach the custom click handler if it's needed (e.g., for menu toggles).
             onClick={onClick ? handleClick : undefined} 
             {...props}
         >
@@ -459,7 +413,6 @@ const MobileNav = ({ isOpen, onClose }) => {
         return () => { document.body.style.overflow = ''; };
     }, [isOpen, onClose]);
 
-    // REFACTOR: Simplified toggle handler, as preventDefault is now handled by AppLink for href="#"
     const handleServicesToggle = () => {
         setIsServicesOpen(prev => !prev);
     }
@@ -473,8 +426,6 @@ const MobileNav = ({ isOpen, onClose }) => {
                 <ul>
                     {navLinks.map(link => (
                          <li key={link.name}>
-                            {/* REFACTOR: Simplified link logic. AppLink now handles navigation and toggling based on href.
-                                 The onClick prop is used for the side-effect of toggling the submenu or closing the nav. */}
                              <AppLink 
                                 href={link.subLinks ? '#' : link.href} 
                                 onClick={link.subLinks ? handleServicesToggle : onClose}
@@ -596,15 +547,6 @@ const Header = ({ theme }) => {
 
   return (
     <header className={headerClasses}>
-      <div className="logo">
-        <AppLink href="/" className="logo-link" aria-label="Taj Design Consult - Homepage">
-            <span className="logo-taj">TAJ</span>
-            <div className="logo-right">
-                <span className="logo-line"></span>
-                <span className="logo-consultancy">DESIGN CONSULTANCY</span>
-            </div>
-        </AppLink>
-      </div>
       <nav className="main-nav" aria-label="Main navigation">
         <ul ref={navRef}>
           {navLinks.map((link) => (
@@ -1191,10 +1133,10 @@ const HomePage = () => {
   ];
   
   const services = [
-    { icon: 'fas fa-archway', title: 'Architectural Design', description: 'Creating innovative and functional spaces from concept to construction, ensuring aesthetic appeal and structural integrity.', href: '/architectural-design.html' },
-    { icon: 'fas fa-cogs', title: 'Engineering Consultancy', description: 'Providing expert technical advice and solutions across various engineering disciplines for robust and efficient project outcomes.', href: '/engineering-consultancy.html' },
-    { icon: 'fas fa-tasks', title: 'Project Management Consultancy', description: 'Overseeing projects from inception to completion, ensuring they are delivered on time, within budget, and to the highest quality standards.', href: '/project-management.html' },
-    { icon: 'fas fa-leaf', title: 'Sustainability & Energy', description: 'Integrating green building principles and energy-efficient solutions to create environmentally responsible and cost-effective designs.', href: '/sustainability-energy.html' },
+    { icon: 'fas fa-archway', title: 'Architectural Design', description: 'Creating innovative and functional spaces from concept to construction, ensuring aesthetic appeal and structural integrity.', href: 'architectural-design.html' },
+    { icon: 'fas fa-cogs', title: 'Engineering Consultancy', description: 'Providing expert technical advice and solutions across various engineering disciplines for robust and efficient project outcomes.', href: 'engineering-consultancy.html' },
+    { icon: 'fas fa-tasks', title: 'Project Management Consultancy', description: 'Overseeing projects from inception to completion, ensuring they are delivered on time, within budget, and to the highest quality standards.', href: 'project-management.html' },
+    { icon: 'fas fa-leaf', title: 'Sustainability & Energy', description: 'Integrating green building principles and energy-efficient solutions to create environmentally responsible and cost-effective designs.', href: 'sustainability-energy.html' },
   ];
 
   const sectors = [
@@ -1204,9 +1146,9 @@ const HomePage = () => {
   ];
 
   const blogPosts = [
-    { image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&auto=format&fit=crop&q=60", category: "Technology", date: "August 15, 2024", title: "The Future of BIM: AI and Generative Design", href: "/blog-bim-ai.html", },
-    { image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop&q=60", category: "Architecture", date: "August 10, 2024", title: "Sustainable Materials in Modern Construction", href: "/blog-sustainable-materials.html", },
-    { image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60", category: "Interior Design", date: "August 05, 2024", title: "Minimalism and Light: Crafting Serene Spaces", href: "/blog-minimalism-light.html", }
+    { image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&auto=format&fit=crop&q=60", category: "Technology", date: "August 15, 2024", title: "The Future of BIM: AI and Generative Design", href: "blog-bim-ai.html", },
+    { image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop&q=60", category: "Architecture", date: "August 10, 2024", title: "Sustainable Materials in Modern Construction", href: "blog-sustainable-materials.html", },
+    { image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60", category: "Interior Design", date: "August 05, 2024", title: "Minimalism and Light: Crafting Serene Spaces", href: "blog-minimalism-light.html", }
   ];
 
    useEffect(() => {
@@ -1463,32 +1405,15 @@ const HomePage = () => {
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  const { currentPath, navigate } = useRouter();
-
+  
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 200);
     return () => clearTimeout(timer);
   }, []);
-
-  const renderPage = () => {
-      if (servicePageData[currentPath]) {
-        // This logic is for potential future SPA routing of service pages.
-        // Currently, they are separate HTML files. This part won't be hit
-        // when navigating directly to the .html files.
-        return <div>Service Page: {servicePageData[currentPath].title}</div>;
-      }
-      if (blogPageData[currentPath]) {
-        return <div>Blog Page: {blogPageData[currentPath].title}</div>;
-      }
-      // Default to home page content
-      return <HomePage />;
-  };
   
-  // Determine header theme based on scroll position and which sections are visible
-  const headerTheme = 'dark'; // Simplified for now, can be made dynamic later
+  const headerTheme = 'dark';
 
   return (
-    <NavigationContext.Provider value={navigate}>
       <div className={`app ${loading ? 'loading' : ''}`}>
         <SkipToContentLink />
         <CustomCursor />
@@ -1497,12 +1422,11 @@ const App = () => {
         <div className="main-container">
           <LeftSidebar pageName="HOME" />
           <main className="main-content" id="main-content" tabIndex={-1}>
-            {renderPage()}
+            <HomePage />
             <Footer />
           </main>
         </div>
       </div>
-    </NavigationContext.Provider>
   );
 };
 

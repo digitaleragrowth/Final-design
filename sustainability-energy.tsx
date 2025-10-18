@@ -5,20 +5,20 @@ import { createRoot } from 'react-dom/client';
 declare const gsap: any;
 
 const servicesSubLinks = [
-  { name: 'Architectural Design', href: 'architectural-design.html' },
-  { name: 'Engineering Consultancy', href: 'engineering-consultancy.html' },
-  { name: 'Project Management Consultancy', href: 'project-management.html' },
-  { name: 'Sustainability & Energy', href: 'sustainability-energy.html' },
+  { name: 'Architectural Design', href: 'architectural-design.html', icon: 'fas fa-archway', description: 'Innovative and functional spaces from concept to construction.', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Engineering Consultancy', href: 'engineering-consultancy.html', icon: 'fas fa-cogs', description: 'Expert technical advice and solutions for robust project outcomes.', image: 'https://images.unsplash.com/photo-1518692113669-e34fa251a37c?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Project Management Consultancy', href: 'project-management.html', icon: 'fas fa-tasks', description: 'Overseeing projects from inception to completion on time and budget.', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60' },
+  { name: 'Sustainability & Energy', href: 'sustainability-energy.html', icon: 'fas fa-leaf', description: 'Integrating green principles for environmentally responsible designs.', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&auto=format&fit=crop&q=60' },
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/index.html' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
@@ -144,7 +144,7 @@ const SkipToContentLink = () => (
     </a>
 );
 
-const Header = () => {
+const Header = ({ theme }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
@@ -206,7 +206,7 @@ const Header = () => {
         window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  
+
   const handleServicesClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsServicesDropdownOpen(prev => !prev);
@@ -214,7 +214,7 @@ const Header = () => {
 
   const handleDropdownItemKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
     const items = Array.from(
-      servicesDropdownContainerRef.current?.querySelectorAll<HTMLAnchorElement>('.dropdown-menu a') || []
+      servicesDropdownContainerRef.current?.querySelectorAll<HTMLAnchorElement>('.dropdown-link-item') || []
     );
     const currentIndex = items.indexOf(e.currentTarget);
 
@@ -231,15 +231,14 @@ const Header = () => {
     }
   };
 
+  const headerClasses = `app-header ${scrolled ? 'scrolled' : ''} on-${theme}`;
+
   return (
-    <header className={`app-header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="logo">
-        <AppLink href="/index.html" className="logo-text">Taj Design Consult</AppLink>
-      </div>
+    <header className={headerClasses}>
       <nav className="main-nav" aria-label="Main navigation">
         <ul>
           {navLinks.map((link) => (
-             <li 
+            <li 
               key={link.name} 
               className={`${link.subLinks ? 'has-dropdown' : ''} ${link.name === 'Services' && isServicesDropdownOpen ? 'open' : ''}`}
               ref={link.name === 'Services' ? servicesDropdownContainerRef : null}
@@ -261,13 +260,25 @@ const Header = () => {
                 )}
               </AppLink>
               {link.subLinks && (
-                <ul id="services-dropdown-menu" className="dropdown-menu" role="menu" aria-labelledby="services-menu-toggle">
-                  {link.subLinks.map((subLink) => (
-                    <li key={subLink.name} role="presentation">
-                      <AppLink href={subLink.href} role="menuitem" onKeyDown={handleDropdownItemKeyDown}>{subLink.name}</AppLink>
-                    </li>
-                  ))}
-                </ul>
+                <div id="services-dropdown-menu" className="dropdown-menu" role="menu" aria-labelledby="services-menu-toggle">
+                  <ul className="dropdown-links" role="none">
+                      {link.subLinks.map((subLink, index) => (
+                          <li role="presentation" key={subLink.name}>
+                              <AppLink
+                                  href={subLink.href}
+                                  role="menuitem"
+                                  onKeyDown={handleDropdownItemKeyDown}
+                                  className="dropdown-link-item"
+                                  onClick={() => setIsServicesDropdownOpen(false)}
+                                  style={{ '--delay': `${index * 0.05}s` } as React.CSSProperties}
+                              >
+                                  <i className={`${subLink.icon} dropdown-link-icon`} aria-hidden="true"></i>
+                                  <span>{subLink.name}</span>
+                              </AppLink>
+                          </li>
+                      ))}
+                  </ul>
+                </div>
               )}
             </li>
           ))}
@@ -482,7 +493,7 @@ const CallToAction = () => (
             <p className="scroll-trigger fade-up" style={{ transitionDelay: '0.2s' }}>
                 Have a vision for your next project? Our team of experts is ready to help you bring it to life. Contact us today to discuss your ideas.
             </p>
-            <a href="/contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
+            <a href="contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
         </div>
     </section>
 );
@@ -543,11 +554,11 @@ const ServicePage = () => {
       <SkipToContentLink />
       <CustomCursor />
       <WhatsAppChatWidget />
-      <Header />
+      <Header theme="light" />
       <div className="main-container">
         <LeftSidebar />
         <main className="main-content" id="main-content" tabIndex={-1}>
-          <section className="service-hero-section scroll-trigger fade-up">
+          <section className="service-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://www.crbgroup.com/wp-content/uploads/2018/09/Sustainable-Site-Energy-Solutions-Header-m.jpg')`}}>
             <div className="container">
               <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>Sustainability &amp; <strong>Energy</strong></h1>
             </div>
@@ -561,7 +572,7 @@ const ServicePage = () => {
                     <p>Our specialists develop tailored solutions in energy auditing, retrofitting, and sustainable design integration. We implement strategies like advanced commissioning, renewable energy integration, and smart building controls to maximize efficiency. These efforts regularly reduce building operating costs by over 50% without compromising comfort, safety, or compliance – delivering tangible savings alongside environmental benefits. With a finger on the pulse of global best practices and local regulations, Taj Consultancy’s sustainability experts ensure each project not only meets today’s goals but also contributes to a greener, more energy-efficient future.</p>
                 </div>
                 <div className="service-sidebar-image">
-                  <img src="https://images.unsplash.com/photo-1579225688258-af53a436a5e1?w=800&auto=format&fit=crop&q=60" alt="Sustainable energy solutions like solar panels on a modern building" />
+                  <img src="https://static.wixstatic.com/media/6a1985_74be50b54f2045528931e2f3278cb581~mv2.jpg/v1/fill/w_1000,h_700,al_c,q_85/6a1985_74be50b54f2045528931e2f3278cb581~mv2.jpg" alt="Sustainable energy solutions like solar panels on a modern building" />
                 </div>
               </div>
 

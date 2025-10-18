@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useRef, memo, MouseEventHandler } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -13,13 +12,13 @@ const servicesSubLinks = [
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/index.html' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const careerOpenings = [
@@ -251,9 +250,6 @@ const Header = () => {
 
   return (
     <header className={`app-header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="logo">
-        <AppLink href="/index.html" className="logo-text">Taj Design Consult</AppLink>
-      </div>
       <nav className="main-nav" aria-label="Main navigation">
         <ul>
           {navLinks.map((link) => (
@@ -614,11 +610,10 @@ const CareersPage = () => {
   
   return (
     <>
-      <section id="careers-hero" className="careers-hero-section scroll-trigger fade-up">
+      <section id="careers-hero" className="careers-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://t3.ftcdn.net/jpg/03/08/91/34/360_F_308913450_oFtJwISX03kBi2vKfbkJkJaf5A19EQtt.jpg')` }}>
         <div className="container">
-          <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>Join Our <strong>Team</strong></h1>
+          <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}><strong></strong></h1>
           <p className="scroll-trigger fade-up" style={{transitionDelay: '0.2s'}}>
-            We believe our strength lies in our people. At Taj Design Consult, we foster a collaborative and innovative environment where creativity thrives. We're always looking for passionate individuals to join us in shaping the future of design.
           </p>
         </div>
       </section>

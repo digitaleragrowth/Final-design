@@ -12,13 +12,13 @@ const servicesSubLinks = [
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/index.html' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
@@ -235,15 +235,6 @@ const Header = ({ theme }) => {
 
   return (
     <header className={headerClasses}>
-      <div className="logo">
-        <AppLink href="/index.html" className="logo-link" aria-label="Taj Design Consult - Homepage">
-            <span className="logo-taj">TAJ</span>
-            <div className="logo-right">
-                <span className="logo-line"></span>
-                <span className="logo-consultancy">DESIGN CONSULTANCY</span>
-            </div>
-        </AppLink>
-      </div>
       <nav className="main-nav" aria-label="Main navigation">
         <ul>
           {navLinks.map((link) => (
@@ -502,7 +493,7 @@ const CallToAction = () => (
             <p className="scroll-trigger fade-up" style={{ transitionDelay: '0.2s' }}>
                 Have a vision for your next project? Our team of experts is ready to help you bring it to life. Contact us today to discuss your ideas.
             </p>
-            <a href="/contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
+            <a href="contact.html" className="cta-button scroll-trigger fade-up" style={{ transitionDelay: '0.3s' }}>Get in Touch</a>
         </div>
     </section>
 );
@@ -513,4 +504,109 @@ const ServicePage = () => {
 
   useEffect(() => {
     document.body.style.backgroundColor = '#fff';
-    const timer =
+    const timer = setTimeout(() => setLoading(false), 200);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) { document.querySelectorAll('.scroll-trigger').forEach(el => el.classList.add('visible')); return; }
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    const elementsToReveal = document.querySelectorAll('.scroll-trigger');
+    elementsToReveal.forEach((el) => observer.observe(el));
+    
+    return () => {
+        document.body.style.backgroundColor = '';
+        clearTimeout(timer);
+        elementsToReveal.forEach((el) => observer.unobserve(el));
+    }
+  }, []);
+
+  const services = [
+    'Structural Engineering – Design of robust and efficient structural systems for buildings and infrastructure.',
+    'MEP (Mechanical, Electrical & Plumbing) Engineering – Integrated design of building services for optimal performance and comfort.',
+    'Civil Engineering – Site development, grading, drainage, and utility design.',
+    'Geotechnical Engineering – Subsurface investigation and foundation design.',
+    'Facade Engineering – Design and analysis of building envelopes for performance and aesthetics.',
+    'Fire & Life Safety Consulting – Code compliance, fire protection system design, and evacuation planning.',
+    'Acoustic Consulting – Design for optimal sound insulation, room acoustics, and noise control.',
+    'Vertical Transportation – Elevator and escalator system design and analysis.',
+    'Value Engineering – Optimizing project value by analyzing function and cost.',
+    'Peer Review & Third-Party Verification – Independent review of engineering designs for quality and compliance.',
+  ];
+
+  const relatedProjects = [
+    { image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=60", title: "Skybridge Tower", category: "Structural Engineering" },
+    { image: "https://images.unsplash.com/photo-1518692113669-e34fa251a37c?w=800&auto=format&fit=crop&q=60", title: "Metropolitan Hospital", category: "MEP Engineering" },
+    { image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=60", title: "Cityline Metro Expansion", category: "Civil & Infrastructure" },
+  ];
+
+  return (
+    <div className={`app ${loading ? 'loading' : ''}`}>
+      <SkipToContentLink />
+      <CustomCursor />
+      <WhatsAppChatWidget />
+      <Header theme="light" />
+      <div className="main-container">
+        <LeftSidebar />
+        <main className="main-content" id="main-content" tabIndex={-1}>
+          <section className="service-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://media.istockphoto.com/id/1944772735/photo/closeup-of-team-of-industrial-engineers-meeting-analyze-machinery-blueprints-consult-project.jpg?s=612x612&w=0&k=20&c=ztBo9tQdQHN7ibdtIeO1MqFcq_F4NguT6Qe_Cwjck1s=')`}}>
+            <div className="container">
+              <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>Engineering <strong>Consultancy</strong></h1>
+            </div>
+          </section>
+
+          <section className="content-section">
+            <div className="container">
+              <div className="service-content-grid scroll-trigger fade-up" style={{transitionDelay: '0.2s'}}>
+                <div className="service-main-content">
+                  <p>
+                    Our Engineering Consultancy division provides the technical backbone for visionary architecture. We deliver integrated, multidisciplinary engineering solutions that are innovative, efficient, and resilient. Our expert teams in structural, MEP, civil, and specialized engineering disciplines work collaboratively to solve complex challenges and ensure that every design is buildable, sustainable, and optimized for performance. We merge technical excellence with a deep understanding of our clients’ goals to deliver projects that stand the test of time.
+                  </p>
+                  <p>
+                    From initial feasibility studies to detailed design and construction support, we are committed to precision and quality. We leverage cutting-edge software and analysis tools to model and test our designs, ensuring they meet the highest standards of safety and efficiency. Our proactive approach to coordination and problem-solving helps streamline the construction process, minimize risks, and deliver exceptional value. We are dedicated to engineering excellence that supports architectural creativity and delivers lasting results.
+                  </p>
+                </div>
+                <div className="service-sidebar-image">
+                  <img src="https://media.istockphoto.com/id/1387565694/photo/digital-technology-used-for-construction-work.jpg?s=612x612&w=0&k=20&c=4JaaPwyqAcjD-cq90Jbecyz1T5K2ZJgIRA5PWcqd_BU=" alt="Engineers collaborating on a blueprint." />
+                </div>
+              </div>
+
+              <div className="service-list-section scroll-trigger fade-up" style={{transitionDelay: '0.3s'}}>
+                <h2 className="section-title">Our Engineering Consultancy services include:</h2>
+                <ul className="service-list">
+                  {services.map((service, index) => (
+                    <li key={index}>
+                      <i className="fas fa-check-circle" aria-hidden="true"></i>
+                      <span>{service}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <RelatedProjects projects={relatedProjects} title="Engineering" />
+          <CallToAction />
+
+          <footer id="footer" className="app-footer">
+            <WaveAnimation />
+            <div className="container">
+                <div className="copyright-section">
+                    <span>2024 © Taj Design Consult. All rights reserved.</span>
+                    <button className="to-top" onClick={scrollToTop} aria-label="Scroll back to top">To Top ↑</button>
+                </div>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<ServicePage />);

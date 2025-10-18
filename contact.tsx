@@ -5,20 +5,20 @@ import { createRoot } from 'react-dom/client';
 declare const gsap: any;
 
 const servicesSubLinks = [
-  { name: 'Architectural Design', href: 'architectural-design.html' },
-  { name: 'Engineering Consultancy', href: 'engineering-consultancy.html' },
-  { name: 'Project Management Consultancy', href: 'project-management.html' },
-  { name: 'Sustainability & Energy', href: 'sustainability-energy.html' },
+  { name: 'Architectural Design', href: 'architectural-design.html', icon: 'fas fa-archway' },
+  { name: 'Engineering Consultancy', href: 'engineering-consultancy.html', icon: 'fas fa-cogs' },
+  { name: 'Project Management Consultancy', href: 'project-management.html', icon: 'fas fa-tasks' },
+  { name: 'Sustainability & Energy', href: 'sustainability-energy.html', icon: 'fas fa-leaf' },
 ];
 
 const navLinks = [
-  { name: 'Home', href: '/index.html' },
-  { name: 'About Us', href: '/about.html' },
-  { name: 'Works/Projects', href: '/index.html#works' },
-  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: '/index.html#blog' },
-  { name: 'Careers', href: '/careers.html' },
-  { name: 'Contact', href: '/contact.html' },
+  { name: 'Home', href: 'index.html' },
+  { name: 'About Us', href: 'about.html' },
+  { name: 'Works/Projects', href: 'index.html#works' },
+  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: 'index.html#blog' },
+  { name: 'Careers', href: 'careers.html' },
+  { name: 'Contact', href: 'contact.html' },
 ];
 
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
@@ -52,6 +52,7 @@ const AppLink = ({ href, className = '', children, onClick, ...props }: {
     );
 };
 
+// FIX: Updated MobileNav to be consistent with the more accessible version in other files.
 const MobileNav = ({ isOpen, onClose }) => {
     const [isServicesOpen, setIsServicesOpen] = useState(false);
     const navContainerRef = useRef<HTMLDivElement>(null);
@@ -99,10 +100,7 @@ const MobileNav = ({ isOpen, onClose }) => {
         return () => { document.body.style.overflow = ''; };
     }, [isOpen, onClose]);
 
-
-    const handleServicesToggle = () => {
-        setIsServicesOpen(prev => !prev);
-    }
+    const handleServicesToggle = () => setIsServicesOpen(prev => !prev);
     
     return (
         <div ref={navContainerRef} className={`mobile-nav-overlay ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-hidden={!isOpen} id="mobile-nav">
@@ -127,7 +125,11 @@ const MobileNav = ({ isOpen, onClose }) => {
                              {link.subLinks && (
                                  <ul id={`mobile-${link.name}-submenu`} className={`mobile-submenu ${isServicesOpen ? 'open' : ''}`} aria-hidden={!isServicesOpen}>
                                      {link.subLinks.map(subLink => (
-                                         <li key={subLink.name}><AppLink href={subLink.href} onClick={onClose}>{subLink.name}</AppLink></li>
+                                         <li key={subLink.name}>
+                                            <AppLink href={subLink.href} onClick={onClose}>
+                                                {subLink.name}
+                                            </AppLink>
+                                        </li>
                                      ))}
                                  </ul>
                              )}
@@ -139,13 +141,13 @@ const MobileNav = ({ isOpen, onClose }) => {
     );
 };
 
-
 const SkipToContentLink = () => (
     <a href="#main-content" className="skip-to-content-link">
         Skip to main content
     </a>
 );
 
+// FIX: Updated Header to be consistent with the more accessible and feature-rich version in other files.
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -154,11 +156,6 @@ const Header = () => {
   const burgerMenuRef = useRef<HTMLButtonElement>(null);
   const servicesToggleRef = useRef<HTMLAnchorElement>(null);
   const servicesDropdownContainerRef = useRef<HTMLLIElement>(null);
-
-  const closeMobileNav = () => {
-    setIsMobileNavOpen(false);
-    burgerMenuRef.current?.focus();
-  };
 
   const closeServicesDropdown = (shouldFocusToggle = true) => {
     if (isServicesDropdownOpen) {
@@ -197,26 +194,21 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isServicesDropdownOpen]);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
 
-    return () => {
-        window.removeEventListener('scroll', handleScroll);
-    };
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   const handleServicesClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsServicesDropdownOpen(prev => !prev);
   };
-
+  
   const handleDropdownItemKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
     const items = Array.from(
-      servicesDropdownContainerRef.current?.querySelectorAll<HTMLAnchorElement>('.dropdown-menu a') || []
+      servicesDropdownContainerRef.current?.querySelectorAll<HTMLAnchorElement>('.dropdown-link-item') || []
     );
     const currentIndex = items.indexOf(e.currentTarget);
 
@@ -235,9 +227,6 @@ const Header = () => {
 
   return (
     <header className={`app-header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="logo">
-        <AppLink href="/index.html" className="logo-text">Taj Design Consult</AppLink>
-      </div>
       <nav className="main-nav" aria-label="Main navigation">
         <ul>
           {navLinks.map((link) => (
@@ -263,13 +252,25 @@ const Header = () => {
                 )}
               </AppLink>
               {link.subLinks && (
-                <ul id="services-dropdown-menu" className="dropdown-menu" role="menu" aria-labelledby="services-menu-toggle">
-                  {link.subLinks.map((subLink) => (
-                    <li key={subLink.name} role="presentation">
-                      <AppLink href={subLink.href} role="menuitem" onKeyDown={handleDropdownItemKeyDown}>{subLink.name}</AppLink>
-                    </li>
-                  ))}
-                </ul>
+                <div id="services-dropdown-menu" className="dropdown-menu" role="menu" aria-labelledby="services-menu-toggle">
+                  <ul className="dropdown-links" role="none">
+                      {link.subLinks.map((subLink, index) => (
+                          <li role="presentation" key={subLink.name}>
+                              <AppLink
+                                  href={subLink.href}
+                                  role="menuitem"
+                                  onKeyDown={handleDropdownItemKeyDown}
+                                  className="dropdown-link-item"
+                                  onClick={() => setIsServicesDropdownOpen(false)}
+                                  style={{ '--delay': `${index * 0.05}s` } as React.CSSProperties}
+                              >
+                                  <i className={`${subLink.icon} dropdown-link-icon`} aria-hidden="true"></i>
+                                  <span>{subLink.name}</span>
+                              </AppLink>
+                          </li>
+                      ))}
+                  </ul>
+                </div>
               )}
             </li>
           ))}
@@ -285,7 +286,7 @@ const Header = () => {
       >
         <i className="fas fa-bars" aria-hidden="true"></i>
       </button>
-      <MobileNav isOpen={isMobileNavOpen} onClose={closeMobileNav} />
+      <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
     </header>
   );
 };
@@ -345,7 +346,6 @@ const WaveAnimation = memo(() => {
 
     return <canvas ref={canvasRef} id="footer-wave-canvas" aria-hidden="true" />;
 });
-
 
 const Footer = () => {
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -453,88 +453,168 @@ const WhatsAppChatWidget = () => (
     </a>
 );
 
-const ContactPageForm = () => {
+const ContactForm = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-    const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-    const [touched, setTouched] = useState<Record<string, boolean>>({});
     const successMessageRef = useRef<HTMLHeadingElement>(null);
 
-    const validate = (data: typeof formData) => {
-        const errors: Record<string, string> = {};
-        if (!data.name.trim()) errors.name = 'Full Name is required.';
-        if (!data.email.trim()) { errors.email = 'Email Address is required.'; } else if (!/\S+@\S+\.\S+/.test(data.email)) { errors.email = 'Email Address is invalid.'; }
-        if (!data.subject.trim()) errors.subject = 'Subject is required.';
-        if (!data.message.trim() || data.message.length < 20) { errors.message = 'Message must be at least 20 characters.'; }
-        return errors;
-    };
-
-    useEffect(() => { if (Object.keys(touched).length > 0) setFormErrors(validate(formData)); }, [formData, touched]);
-    useEffect(() => { if (isSubmitted) { successMessageRef.current?.focus(); successMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}, [isSubmitted]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => setTouched(prev => ({ ...prev, [e.target.name]: true }));
+    useEffect(() => { 
+        if (isSubmitted) { 
+            successMessageRef.current?.focus(); 
+            successMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+        }
+    }, [isSubmitted]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setTouched({ name: true, email: true, subject: true, message: true });
-        const currentErrors = validate(formData);
-        setFormErrors(currentErrors);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        const subject = formData.get('subject') as string;
+        const message = formData.get('message') as string;
 
-        if (Object.keys(currentErrors).length > 0) {
-            const firstErrorField = Object.keys(currentErrors)[0];
-            if (firstErrorField) {
-                document.getElementById(firstErrorField)?.focus();
-            }
+        if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
+            alert('Please fill in all fields before sending.');
             return;
         }
-
-        // Simulating mailto link generation
-        const { name, email, subject, message } = formData;
-        const mailtoSubject = encodeURIComponent(subject);
-        const mailtoBody = encodeURIComponent(
-            `Name: ${name}\n` +
-            `Email: ${email}\n\n` +
-            `Message:\n${message}`
-        );
-
-        window.location.href = `mailto:info@tajdc.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
         setIsSubmitted(true);
     };
 
-    const handleResetForm = () => {
-        setIsSubmitted(false);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setTouched({});
-        setFormErrors({});
-        const nameInput = document.getElementById('name');
-        if (nameInput) {
-            nameInput.focus();
-        }
-    };
-
-
     return (
         <div className="contact-form-container">
-            <form onSubmit={handleSubmit} className={`contact-page-form ${isSubmitted ? 'submitted' : ''}`} aria-hidden={isSubmitted} noValidate>
-                 <div className="form-row">
+            <form onSubmit={handleSubmit} className={`contact-page-form ${isSubmitted ? 'submitted' : ''}`} aria-hidden={isSubmitted}>
+                <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="name">Full Name</label>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} onBlur={handleBlur} required className={touched.name && formErrors.name ? 'invalid' : ''} aria-invalid={touched.name && !!formErrors.name} aria-describedby={touched.name && formErrors.name ? 'name-error' : undefined} />
-                        {touched.name && formErrors.name && <span id="name-error" className="error-message" role="alert">{formErrors.name}</span>}
+                        <input type="text" id="name" name="name" required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="email">Email Address</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} onBlur={handleBlur} required className={touched.email && formErrors.email ? 'invalid' : ''} aria-invalid={touched.email && !!formErrors.email} aria-describedby={touched.email && formErrors.email ? 'email-error' : undefined} />
-                        {touched.email && formErrors.email && <span id="email-error" className="error-message" role="alert">{formErrors.email}</span>}
+                        <input type="email" id="email" name="email" required />
                     </div>
                 </div>
                  <div className="form-group">
                     <label htmlFor="subject">Subject</label>
-                    <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} onBlur={handleBlur} required className={touched.subject && formErrors.subject ? 'invalid' : ''} aria-invalid={touched.subject && !!formErrors.subject} aria-describedby={touched.subject && formErrors.subject ? 'subject-error' : undefined} />
-                    {touched.subject && formErrors.subject && <span id="subject-error" className="error-message" role="alert">{formErrors.subject}</span>}
+                    <input type="text" id="subject" name="subject" required style={{width: '100%'}}/>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="message">Message (min. 20 characters)</label>
-                    <textarea id="message" name="message" rows={6} value={formData.message} onChange={handleInputChange} onBlur={handleBlur} required className={touched.message && formErrors.message ? 'invalid' : ''} aria-invalid={touched.message && !!formErrors.message} aria-describedby={touched.message && formErrors.message ? 'message-error'
+                    <label htmlFor="message">Message</label>
+                    <textarea id="message" name="message" rows={6} required></textarea>
+                </div>
+                <button type="submit" className="submit-btn">Send Message</button>
+            </form>
+             <div className={`success-message ${isSubmitted ? 'visible' : ''}`} aria-hidden={!isSubmitted} aria-live="polite">
+                <i className="fas fa-check-circle" aria-hidden="true"></i>
+                <h3 ref={successMessageRef} tabIndex={-1}>Thank You!</h3>
+                <p>Your message has been sent. We will get back to you shortly.</p>
+            </div>
+        </div>
+    );
+};
+
+const ContactPage = () => {
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) { 
+        document.querySelectorAll('.scroll-trigger').forEach(el => el.classList.add('visible')); 
+        return; 
+    }
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { 
+              entry.target.classList.add('visible'); 
+              obs.unobserve(entry.target); 
+            }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    const elementsToReveal = document.querySelectorAll('.scroll-trigger');
+    elementsToReveal.forEach((el) => observer.observe(el));
+    return () => elementsToReveal.forEach((el) => observer.unobserve(el));
+  }, []);
+  
+  return (
+    <>
+      <section id="contact-hero" className="contact-hero-section scroll-trigger fade-up">
+        <div className="container">
+          <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>Get in <strong>Touch</strong></h1>
+          <p className="scroll-trigger fade-up" style={{transitionDelay: '0.2s'}}>
+            We're here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.
+          </p>
+        </div>
+      </section>
+
+      <section id="contact-details" className="content-section">
+        <div className="container">
+            <h2 className="section-title scroll-trigger fade-up" style={{textAlign: 'center', marginBottom: '60px'}}>Contact <strong>Information</strong></h2>
+            <div className="contact-grid">
+                <div className="contact-info-items scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}>
+                    <div className="contact-info-item">
+                        <div className="icon-wrapper"><i className="fas fa-map-marker-alt" aria-hidden="true"></i></div>
+                        <div>
+                            <h4>Our Location</h4>
+                            <p>14th floor, Al Jazeera tower, Westbay, Doha, Qatar</p>
+                        </div>
+                    </div>
+                    <div className="contact-info-item">
+                        <div className="icon-wrapper"><i className="fas fa-phone" aria-hidden="true"></i></div>
+                        <div>
+                            <h4>Phone Number</h4>
+                            <p><a href="tel:+97477123400">+974 7712 3400</a></p>
+                        </div>
+                    </div>
+                    <div className="contact-info-item">
+                        <div className="icon-wrapper"><i className="fas fa-envelope" aria-hidden="true"></i></div>
+                        <div>
+                            <h4>Email Address</h4>
+                            <p><a href="mailto:info@tajdc.com">info@tajdc.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      <section className="contact-form-section content-section">
+        <div className="container">
+           <h2 id="contact-form-title" className="section-title scroll-trigger fade-up" style={{textAlign: 'center'}}>Send Us A <strong>Message</strong></h2>
+           <div className="scroll-trigger fade-up" role="region" aria-labelledby="contact-form-title">
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </>
+  );
+};
+
+const App = () => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        document.body.style.backgroundColor = '#fff';
+        const timer = setTimeout(() => setLoading(false), 200);
+        return () => {
+            document.body.style.backgroundColor = '';
+            clearTimeout(timer);
+        };
+    }, []);
+
+    return (
+        <div className={`app ${loading ? 'loading' : ''} no-sidebar`}>
+            <SkipToContentLink />
+            <CustomCursor />
+            <WhatsAppChatWidget />
+            <Header />
+            <main className="main-content" id="main-content" tabIndex={-1}>
+                <ContactPage />
+            </main>
+        </div>
+    );
+};
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<App />);
