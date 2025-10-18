@@ -24,7 +24,7 @@ const navLinks = [
 ];
 
 const servicePageData = {
-    '/architectural-design.html': {
+    'architectural-design.html': {
         title: 'Architectural Design',
         image: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=800&auto=format&fit=crop&q=60',
         alt: 'Architectural design sketch',
@@ -51,7 +51,7 @@ const servicePageData = {
             'Municipality Approvals – Navigating local authority regulations and obtaining necessary building permits and approvals.',
         ],
     },
-    '/engineering-consultancy.html': {
+    'engineering-consultancy.html': {
         title: 'Engineering Consultancy',
         image: 'https://images.unsplash.com/photo-1581092446337-234557050003?w=800&auto=format&fit=crop&q=60',
         alt: 'Engineers collaborating on a blueprint.',
@@ -72,7 +72,7 @@ const servicePageData = {
             'Peer Review & Third-Party Verification – Independent review of engineering designs for quality and compliance.',
         ],
     },
-    '/project-management.html': {
+    'project-management.html': {
         title: 'Project & Construction Management',
         image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&auto=format&fit=crop&q=60',
         alt: 'Construction site with project managers reviewing plans.',
@@ -92,7 +92,7 @@ const servicePageData = {
             'Commissioning & Handover Management – Managing the final stages of a project, including system testing, training, and final handover.',
         ],
     },
-    '/sustainability-energy.html': {
+    'sustainability-energy.html': {
         title: 'Sustainability & Energy',
         image: 'https://images.unsplash.com/photo-1579225688258-af53a436a5e1?w=800&auto=format&fit=crop&q=60',
         alt: 'Sustainable energy solutions like solar panels on a modern building',
@@ -348,17 +348,17 @@ const AppLink = ({ href, className = '', children, onClick, ...props }: {
         if (isToggle) {
             e.preventDefault();
         }
-        
+
         if (onClick) {
             onClick(e);
         }
     };
 
     return (
-        <a 
-            href={href} 
-            className={className} 
-            onClick={onClick ? handleClick : undefined} 
+        <a
+            href={href}
+            className={className}
+            onClick={onClick ? handleClick : undefined}
             {...props}
         >
             {children}
@@ -1133,10 +1133,10 @@ const HomePage = () => {
   ];
   
   const services = [
-    { icon: 'fas fa-archway', title: 'Architectural Design', description: 'Creating innovative and functional spaces from concept to construction, ensuring aesthetic appeal and structural integrity.', href: 'architectural-design.html' },
-    { icon: 'fas fa-cogs', title: 'Engineering Consultancy', description: 'Providing expert technical advice and solutions across various engineering disciplines for robust and efficient project outcomes.', href: 'engineering-consultancy.html' },
-    { icon: 'fas fa-tasks', title: 'Project Management Consultancy', description: 'Overseeing projects from inception to completion, ensuring they are delivered on time, within budget, and to the highest quality standards.', href: 'project-management.html' },
-    { icon: 'fas fa-leaf', title: 'Sustainability & Energy', description: 'Integrating green building principles and energy-efficient solutions to create environmentally responsible and cost-effective designs.', href: 'sustainability-energy.html' },
+    { icon: 'fas fa-archway', title: 'Architectural Design', description: 'Creating innovative and functional spaces from concept to construction, ensuring aesthetic appeal and structural integrity.', href: '/services/architectural-design' },
+    { icon: 'fas fa-cogs', title: 'Engineering Consultancy', description: 'Providing expert technical advice and solutions across various engineering disciplines for robust and efficient project outcomes.', href: '/services/engineering-consultancy' },
+    { icon: 'fas fa-tasks', title: 'Project Management Consultancy', description: 'Overseeing projects from inception to completion, ensuring they are delivered on time, within budget, and to the highest quality standards.', href: '/services/project-management' },
+    { icon: 'fas fa-leaf', title: 'Sustainability & Energy', description: 'Integrating green building principles and energy-efficient solutions to create environmentally responsible and cost-effective designs.', href: '/services/sustainability-energy' },
   ];
 
   const sectors = [
@@ -1405,12 +1405,12 @@ const HomePage = () => {
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 200);
     return () => clearTimeout(timer);
   }, []);
-  
+
   const headerTheme = 'dark';
 
   return (
