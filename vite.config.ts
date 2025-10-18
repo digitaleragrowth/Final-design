@@ -10,14 +10,19 @@ export default defineConfig(({ mode }) => {
         host: '0.0.0.0',
       },
       plugins: [react()],
+      build: {
+        rollupOptions: {
+          input: {
+            main: path.resolve(__dirname, 'index.html'),
+          },
+        },
+      },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
       resolve: {
         alias: {
-          // FIX: Replaced `process.cwd()` with `'.'` to resolve path to project root,
-          // avoiding the "Property 'cwd' does not exist on type 'Process'" TypeScript error.
           '@': path.resolve('.'),
         }
       }
