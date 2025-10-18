@@ -610,7 +610,7 @@ const CareersPage = () => {
   
   return (
     <>
-      <section id="careers-hero" className="careers-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://t3.ftcdn.net/jpg/03/08/91/34/360_F_308913450_oFtJwISX03kBi2vKfbkJkJaf5A19EQtt.jpg')` }}>
+      <section id="careers-hero" className="careers-hero-section scroll-trigger fade-up" style={{ backgroundImage: `url('https://blog.culturewise.com/hs-fs/hubfs/think%20team%20first.jpg?width=600&name=think%20team%20first.jpg')` }}>
         <div className="container">
           <h1 className="scroll-trigger fade-up" style={{transitionDelay: '0.1s'}}><strong></strong></h1>
           <p className="scroll-trigger fade-up" style={{transitionDelay: '0.2s'}}>
