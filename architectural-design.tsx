@@ -13,13 +13,13 @@ const servicesSubLinks = [
 ];
 
 const navLinks = [
-  { name: 'Home', href: 'index.html' },
-  { name: 'About Us', href: 'about.html' },
-  { name: 'Works/Projects', href: 'index.html#works' },
-  { name: 'Services', href: 'index.html#our-services', subLinks: servicesSubLinks },
-  { name: 'Blog', href: 'index.html#blog' },
-  { name: 'Careers', href: 'careers.html' },
-  { name: 'Contact', href: 'contact.html' },
+  { name: 'Home', href: '/index.html' },
+  { name: 'About Us', href: '/about.html' },
+  { name: 'Works/Projects', href: '/index.html#works' },
+  { name: 'Services', href: '/index.html#our-services', subLinks: servicesSubLinks },
+  { name: 'Blog', href: '/index.html#blog' },
+  { name: 'Careers', href: '/careers.html' },
+  { name: 'Contact', href: '/contact.html' },
 ];
 
 const AppLink = ({ href, className = '', children, onClick, ...props }: {
