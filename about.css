@@ -289,10 +289,10 @@ html, body {
 .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 60px; }
 .value-card { background-color: #fff; padding: 40px 30px; border-radius: 8px; text-align: center; transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
 .value-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-.value-icon-wrapper { width: 80px; height: 80px; border-radius: 50%; background-color: #e9e9e9; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; transition: background-color 0.3s ease; }
-.value-icon { font-size: 36px; color: var(--accent-color); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), color 0.3s ease; }
+.value-icon-wrapper { width: 80px; height: 80px; border-radius: 50%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; transition: background-color 0.3s ease; }
+.value-icon { font-size: 36px; color: var(--accent-color); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), color 0.3s ease, text-shadow 0.3s ease; }
 .value-card:hover .value-icon-wrapper { background-color: var(--accent-color); }
-.value-card:hover .value-icon { color: var(--text-dark); transform: scale(1.1) rotate(-10deg); }
+.value-card:hover .value-icon { color: #fff; transform: scale(1.1) rotate(15deg); text-shadow: 0 0 12px rgba(255, 255, 255, 0.8); }
 .value-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); }
 .value-card p { font-size: 15px; line-height: 1.7; color: #666; }
 
